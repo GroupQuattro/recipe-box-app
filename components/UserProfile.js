@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { View, StyleSheet, Platform, Text, Dimensions, FlatList } from 'react-native';
-import { Button, TextInput, Title, Subheading, Avatar, Card, List } from 'react-native-paper';
-import { useForm, Controller } from 'react-hook-form'
-import { TouchableHighlight } from 'react-native-gesture-handler';
-import Firebase from '../configure/Firebase';
+import { useState } from 'react';
 
+import { View, StyleSheet, Platform, Text, Dimensions, FlatList } from 'react-native';
+import { Button, TextInput, Title, Subheading, Avatar, Card, List, Snackbar, Banner } from 'react-native-paper';
+import { useForm, Controller } from 'react-hook-form'
+import { TouchableHighlight, ScrollView } from 'react-native-gesture-handler';
+import Firebase from '../configure/Firebase';
+import SafeAreaView from 'react-native-safe-area-view';
+//import Toast, { DURATION } from 'react-native-easy-toast'
+//import Toast from 'react-native-root-toast';
 
 const styles = StyleSheet.create({
   label: {
@@ -20,7 +24,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    //position: "relative",
     paddingTop: 3,
     padding: 8,
     backgroundColor: '#263238',
@@ -40,15 +44,26 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
+
     alignItems: 'center',
     paddingTop: 3,
     padding: 8,
     margin: 10,
-    backgroundColor: '#4FC3F7',
+    backgroundColor: '#F48FB1',
     borderRadius: 10,
     height: 'auto',
+    shadowColor: "#D81B60",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.33,
+    shadowRadius: 8.62,
+
+    elevation: 8,
 
   },
+
   input: {
     backgroundColor: '#FFFFFF',
     borderWidth: 0,
@@ -60,21 +75,24 @@ const styles = StyleSheet.create({
 
 
 
-function UserProfile({ props }) {
+function UserProfile({ props, user }) {
+  console.log('USER PROFLE: ******')
 
+  const [showSnack, setShowSnack] = useState(false);
   var firstName = 'User';
   var lastName = 'Profile';
+  console.log('USER IS ))))))))))) : ')
+  console.log(user);
 
   /*if(params.names) {
-
     firstName = params.names.firstName;
     lastName = params.names.lastName;
   }*/
   // Fill with data from API call for user saved recipes  
   const savedRecipes = [
-    { title: "Recipe 1", source: 'https://picsum.photos/200', key: 'item1' },
+    /*{ title: "Recipe 1", source: 'https://picsum.photos/200', key: 'item1' },
     { title: "Recipe 2", source: 'https://picsum.photos/200', key: 'item2' },
-    { title: "Recipe 3", source: 'https://picsum.photos/200', key: 'item3' }
+    { title: "Recipe 3", source: 'https://picsum.photos/200', key: 'item3' }*/
   ];
 
   // Fill with data from API call for user cookbooks  
@@ -117,7 +135,7 @@ function UserProfile({ props }) {
   const noSavedCookbooks = () => {
 
     return (
-      <Button style={{ marginHorizontal: 10, marginVertical: 20 }} mode="contained" onPress={() => props.navigate('CreateCookbook')}>
+      <Button style={{ marginHorizontal: 10, marginVertical: 20, backgroundColor: '#64B5F6' }} mode="contained" onPress={() => props.navigate('CreateCookbook')}>
         Create a Cookbook
       </Button>
     )
@@ -128,78 +146,66 @@ function UserProfile({ props }) {
   const noSavedRecipes = () => {
 
     return (
-      <Button style={{ marginHorizontal: 10, marginVertical: 20 }} mode="contained" onPress={() => props.navigate('Search')}>
-        Go to Recipes
+      <View>
+        <Button style={{ marginHorizontal: 10, marginVertical: 20, backgroundColor: '#64B5F6' }} mode="contained" onPress={() => props.navigate('Search')}>
+          Go to Recipes
       </Button>
+        <Button style={{ marginHorizontal: 10, marginVertical: 20, backgroundColor: '#64B5F6' }} mode="contained" onPress={() => setShowSnack(true)}>
+          Create A Recipe
+      </Button>
+      </View>
     )
 
   }
 
   return (
+    <SafeAreaView style={{ flex: 3 }}>
+      <Snackbar
+        visible={showSnack}
+        onDismiss={() => setShowSnack(false)}
 
-    <View style={styles.container}>
+        action={{
+          label: 'Undo',
+          onPress: () => {
+            // Do something
+          },
+        }}
+      >
+        Hey there! I'm a Snackbar.
+        </Snackbar>
+      <Banner
+        visible={showSnack}
+        style={{ backgroundColor: '#EEEEEE' }}
+        actions={[
+          {
+            label: 'Dismiss',
+            onPress: () => { setShowSnack(false) },
+          }
+        ]}
+
+      >
+        Under Development
+      </Banner>
       <View style={styles.innerContainer}>
-        <Avatar.Text color='#EEEEEE' size={150} label={firstName.charAt(0) + lastName.charAt(0)} style={{ marginVertical: 20, backgroundColor: '#448AFF' }} ></Avatar.Text>
-        <Text style={{ color: '#EEEEEE', fontSize: 30, marginVertical: 10 }}> {firstName} {lastName}</Text>
+        <Title>Welcome, {user.displayName}</Title>
       </View>
 
-
       <View style={styles.innerContainer} >
-        <Button style={{ marginHorizontal: 10, marginTop: 20 }} mode="contained" onPress={() => props.navigate('ChangeEmail')}>
+        <Title>Account Settings</Title>
+        <Button style={{ marginHorizontal: 10, marginTop: 20, backgroundColor: '#64B5F6' }} mode="contained" onPress={() => props.navigate('ChangeEmail')}>
           Change Email
           </Button>
-        <Button style={{ marginHorizontal: 10, marginVertical: 20 }} mode="contained" onPress={() => props.navigate('ChangePassword')}>
+        <Button style={{ marginHorizontal: 10, marginTop: 20, backgroundColor: '#64B5F6' }} mode="contained" onPress={() => props.navigate('ChangePassword')}>
           Change Password
+          </Button>
+        <Button style={{ marginHorizontal: 10, marginVertical: 20, backgroundColor: '#B71C1C' }} mode="contained" onPress={() => props.navigate('DeleteUser')}>
+          Delete Account
           </Button>
       </View>
 
-      <View style={styles.innerContainer} >
-        <Subheading style={{ color: '#EEEEEE', fontSize: 20, marginVertical: 10 }}>Saved Recipes</Subheading>
-        <Title>No Saved Recipes Found</Title>
-        { /*
-        <FlatList
-          ListEmptyComponent={noSavedRecipes}
-          ItemSeparatorComponent={seperator}
-          style={{ borderColor: 'green' }}
-          horizontal={true}
-          data={savedRecipes}
-          renderItem={showRecipeCard}
 
-        />*/
-        }
-      </View>
 
-      <View style={styles.innerContainer} >
-        <Subheading style={{ color: '#EEEEEE', fontSize: 20, marginVertical: 10 }}>Cookbooks</Subheading>
-        <FlatList
-          ListEmptyComponent={noSavedCookbooks}
-          ItemSeparatorComponent={seperator}
-          style={{ borderColor: 'green' }}
-          horizontal={true}
-          data={savedCookbooks}
-          renderItem={showCookbookCard}
-
-        />
-      </View>
-
-      <View style={styles.innerContainer} >
-        {/*
-        <Button color='#FFFFFF' style={{ alignSelf: 'center', backgroundColor: 'grey', margin: 20 }} onPress={() => {
-          Firebase.auth().signOut().then(function () {
-            // Sign-out successful.
-            props.navigate('Login')
-          }).catch(function (error) {
-            // An error happened.
-            console.log(error);
-          });
-        }}>
-          Logout
-        </Button>
-        */
-        }
-      </View>
-
-    </View>
+    </SafeAreaView>
 
   );
 

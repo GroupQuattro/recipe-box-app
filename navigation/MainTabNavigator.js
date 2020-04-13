@@ -11,32 +11,59 @@ import UserProfileFormScreen from '../screens/UserProfileFormScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
+import DeleteUserScreen from '../screens/DeleteUserScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import ChangeEmailScreen from '../screens/ChangeEmailScreen';
 import SecurityQuestionScreen from '../screens/SecurityQuestionScreen';
-import DevScreen from '../screens/DevScreen';
+import ContactScreen from '../screens/ContactScreen';
 import SearchScreen from '../screens/SearchScreen';
-import SearchResults from '../components/SearchResults';
 import VerificationScreen from '../screens/VerificationScreen';
+import ShoppingListScreen from '../screens/ShoppingListScreen';
+import SearchResultScreen from '../screens/SearchResultScreen';
+//import ViewRecipe from '../components/ViewRecipe';
+
+import Loading from '../screens/Loading';
+import ViewRecipeScreen from '../screens/ViewRecipeScreen';
+import UserHomeScreen from '../screens/UserHomeScreen';
+import EditRecipeScreen from '../screens/EditRecipeScreen';
+import UserItemsScreen from '../screens/UserItemsScreen';
+import ViewCookbookScreen from '../components/ViewCookbookScreen';
+import ViewCookbook from '../components/ViewCookbook';
+import ViewBasic from '../components/ViewBasic';
 const config = Platform.select({
   web: { headerMode: 'screen' },
   default: {},
 });
 
+
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    UserHomeScreen: UserHomeScreen,
+    ViewRandomRecipe: ViewRecipeScreen,
+    Shopping: ShoppingListScreen,
+    UserItems: UserItemsScreen,
+    EditRecipe: EditRecipeScreen,
+    ViewBasicRecipe: ViewBasic,
+    ViewCookbook: ViewCookbook
+
+
   },
   config
 );
 
 HomeStack.navigationOptions = {
+
   tabBarLabel: <Text style={{ fontSize: 14 }}> Home </Text>,
+
   size: 30,
+
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={'home'}
     />
+
   ),
 };
 
@@ -44,20 +71,24 @@ HomeStack.path = '';
 
 const AccountStack = createStackNavigator(
   {
-    Login: LoginScreen,
-    Register: RegisterScreen,
-    ForgotPassword: ForgotPasswordScreen,
-    UserAccount: UserProfileFormScreen,
-    SecurityQuestion: SecurityQuestionScreen,
+
     UserProfile: UserProfileScreen,
+    UserAccount: UserProfileFormScreen,
+    ForgotPassword: ForgotPasswordScreen,
+
+    SecurityQuestion: SecurityQuestionScreen,
     Verification: VerificationScreen,
+    CreateCookbook: PageNotFound,
+    ChangeEmail: ChangeEmailScreen,
+    ChangePassword: ChangePasswordScreen,
+    DeleteUser: DeleteUserScreen,
 
   },
   config
 );
 
 AccountStack.navigationOptions = {
-  tabBarLabel: <Text style={{ fontSize: 14 }}> Account </Text>,
+  tabBarLabel: <Text style={{ fontSize: 14 }}> Profile </Text>,
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={'account'} />
   ),
@@ -68,7 +99,10 @@ AccountStack.path = '';
 const SearchStack = createStackNavigator(
   {
     Search: SearchScreen,
-    Results: SearchResults,
+    Results: SearchResultScreen,
+    Shopping: ShoppingListScreen,
+    ViewAdvancedRecipe: ViewRecipeScreen
+
   },
   config
 );
@@ -100,8 +134,7 @@ SettingsStack.path = '';
 
 const OptionsStack = createStackNavigator(
   {
-    Options: UserProfileFormScreen,
-    Profile: UserProfileScreen,
+    ContactUs: ContactScreen
   },
   config
 );
@@ -109,7 +142,7 @@ const OptionsStack = createStackNavigator(
 OptionsStack.navigationOptions = {
   tabBarLabel: <Text style={{ fontSize: 14 }}> Options </Text>,
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={'camera-control'} />
+    <TabBarIcon focused={focused} name={'help-box'} />
   ),
 };
 
@@ -119,12 +152,11 @@ const tabNavigator = createMaterialBottomTabNavigator({
   HomeStack,
   AccountStack,
   SearchStack,
-  SettingsStack,
   OptionsStack
 }, {
     inactiveColor: '#BDBDBD',
     activeColor: '#FFFFFF',
-    barStyle: { backgroundColor: "#EC407A" }
+    barStyle: { backgroundColor: "#F06292" }
   });
 
 tabNavigator.path = '';

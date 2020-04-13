@@ -9,128 +9,154 @@ import {
   Text,
   ImageBackground
 } from 'react-native';
-import { Button, Title, Card } from 'react-native-paper';
+import { Button, Title, Card, Subheading, Snackbar, Banner } from 'react-native-paper';
 import TopNavbar from '../components/TopNavbar';
+import { withNavigation, NavigationActions, StackActions } from 'react-navigation';
 
 import Firebase from '../configure/Firebase';
 import { thisTypeAnnotation } from '@babel/types';
 import { AuthSession } from 'expo';
 
-const baseStyle = StyleSheet.create({
-  scrollViewBase: {
-    backgroundColor: '#263238',
-    elevation: 5,
-    margin: 8,
-    marginBottom: 0,
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderTopWidth: 6,
-    borderColor: 'transparent',
-    borderTopColor: '#EC407A',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-  },
-  label: {
-    color: '#FFFFFF',
-    margin: 20,
-    marginLeft: 0
-  },
-  button: {
-    marginTop: 40,
-    height: 20,
-    backgroundColor: '#1DE9B6',
-    borderRadius: 4
-  },
-  container: {
+const styles = StyleSheet.create({
+  nestedCardStyle: {
     flex: 1,
-    justifyContent: 'center',
-    paddingTop: 3,
-    padding: 8,
-    //backgroundColor: '#263238',
+    margin: 15,
+    padding: 10,
     borderRadius: 10,
-    height: 'auto',
+    backgroundColor: '#FFFFFF',
+    margin: 5,
+    height: 200,
+    marginBottom: 20,
     ...Platform.select({
       ios: {
-        width: 320
-      },
-      web: {
-        width: ((Dimensions.get('window').width) < 500) ? ((Dimensions.get('window').width) - 50) : 600,
+        width: 270
       },
       android: {
-        width: 320
+        width: 270,
+
       },
-    })
-  },
-  input: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 0,
-    height: 30,
-    padding: 5,
-    borderRadius: 4,
+      web: {
+        width: ((Dimensions.get('window').width) < 500) ? ((Dimensions.get('window').width) - 70) : 550,
+
+
+      }
+
+    }),
   }
 });
-
 class VerificationScreen extends React.Component {
+  notifyMessage = "Oops!, something went wrong. Try again later.";
   constructor(props) {
+
     super(props);
     this.state = {
-      navigation: this.props.navigation,
+      showSnack: false,
+      currentUser: null,
+      message: "An email has been sent to ",
+    }
+  }
 
+
+  logoutUser = async () => {
+    try {
+      await Firebase.auth().signOut();
+      // await Firebase.auth().currentUser.delete;
+      //this.setState({ user: null }); // Remember to remove the user from your app's state as well
+      this.props.navigation.navigate('Login');
+      /*
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'Login' })
+        ]
+      });
+      this.props.navigation.dispatch(resetAction);
+      */
+    } catch (error) {
+      console.error(error);
     }
 
-    var user = Firebase.auth().currentUser;
+  };
 
-    if (user) {
-
-      if (!user.emailVerified) {
-        user.sendEmailVerification().then(function () {
-          console.log(' Email sent.');
-
-        }).catch(function (error) {
-          console.log(' Already Verified.');
-          console.log(user.emailVerified);
-        });
-      }
-    }
-
-
+  toggleSnack = async () => {
+    var user = await Firebase.auth().currentUser;
+    this.setState({ showSnack: true, currentUser: user });
   }
   sendVerification = async () => {
     var user = await Firebase.auth().currentUser;
-    if (!user.emailVerified) {
-      user.sendEmailVerification().then(function () {
 
-        console.log(' Email sent to : ' + user.email);
+    if (!user.emailVerified) {
+      //  l sentEmail = true;
+      this.setState({ currentUser: user });
+      user.sendEmailVerification().then(function () {
+        // sentEmail = true;
+        //this.setState({ currentUser: user });
+        // this.notifyMessage = "A verification email has been sent to";
+        // this.setState({ message: "A verification email has been sent to" });
+        //this.setState
+
+        // this.setState({ showSnack: true });
+
 
       }).catch(function (error) {
-        console.log(' Already Verified.');
-        console.log(user.emailVerified);
+        //  sentEmail = true;
+        //   this.setState({ message: "A verification email has been sent to" })
       });
+      //  if (sentEmail) {
+      //  this.setState({ message: "A verification email has been sent to" })
+      //  this.notifyMessage = "A verification email has been sent to";
+      //   this.setState({ currentUser: user });
+      //  }
+
     }
+    this.setState({ showSnack: true });
   }
 
   callbackFunction = (childData) => {
     this.setState({ login: childData });
-    console.log("login complete!")
   }
 
   render() {
-
+    //backgroundColor: '#FFF9C4',
     return (
 
       <SafeAreaView style={{ flex: 3 }}>
-        <TopNavbar title='Verification'></TopNavbar>
-        <ScrollView style={baseStyle.scrollViewBase}>
+        <Banner
+          visible={this.state.showSnack}
+          style={{ backgroundColor: '#FFEE58', borderRadius: 10, margin: 10 }}
+          contentStyle={{ height: 'auto' }}
+          icon='information'
+          actions={[
+            {
+              label: 'CLOSE',
+              onPress: () => { this.setState({ showSnack: false }) },
+              mode: 'contained',
 
-          <View style={{ backgroundColor: '#FFF59D', width: 'auto', marginStart: 10, marginTop: 30, marginEnd: 10, position: 'relative', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', borderWidth: 0, borderRadius: 30, overflow: "hidden", alignSelf: 'center', padding: 15 }}>
+            }
+          ]}
 
-            <Title style={{ color: '#00000', fontSize: 14 }}>Please check your email for a verification link.</Title>
-            <Button onPress={this.sendVerification}>Send Verification Again </Button>
+        >
+          <Subheading>{this.state.message}</Subheading><Subheading style={{ color: '#E91E63' }}>{(this.state.currentUser) ? (this.state.currentUser.email) : ''}</Subheading>
+        </Banner>
+        <View style={{ flex: 3, width: 'auto', maxHeight: 400, marginStart: 10, marginTop: 20, marginEnd: 10, marginBottom: 90, position: 'relative', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', borderWidth: 0, borderRadius: 30, overflow: "hidden", alignSelf: 'center', padding: 11 }}>
+          <Card styles={styles.nestedCardStyle}>
+            <Card.Title subtitleStyle={{ color: '#F9A825', fontSize: 20 }} subtitle="Information" />
+            <Card.Content>
+              <Title style={{ fontSize: 30 }}>Verification Required</Title>
+              <Subheading style={{ fontSize: 20, color: '#000000', marginTop: 10 }}>You need to verify your account to proceed further</Subheading>
+              <Subheading style={{ fontSize: 20, color: '#E91E63', marginTop: 10 }}>A verification email has been sent to your email.</Subheading>
+            </Card.Content>
+            <Card.Actions style={{ justifyContent: "center", marginTop: 10 }}>
+              <Button mode='contained' onPress={this.sendVerification} >Send Verification Again </Button>
+              <Button style={{ backgroundColor: '#E53935', margin: 5, position: 'relative' }} color='#FFFFFF' onPress={this.logoutUser}>Logout</Button>
+            </Card.Actions>
 
-          </View>
+          </Card>
 
-        </ScrollView>
-      </SafeAreaView>
+        </View>
+
+
+      </SafeAreaView >
     );
   }
 }

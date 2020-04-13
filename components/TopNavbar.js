@@ -44,24 +44,8 @@ class TopNavbar extends React.Component {
       show: false,
       userLoggedIn: (Firebase.auth().currentUser) ? true : false
     };
-    console.log(Firebase.auth().currentUser);
   }
 
-  componentDidMount() {
-
-    if (Firebase.auth().currentUser) {
-      console.log(Firebase.auth().currentUser);
-      this.setState({ userLoggedIn: true });
-    }
-
-  }
-  componentDidUpdate() {
-    /*
-    if (Firebase.auth().currentUser) {
-      this.setState({ userLoggedIn: true });
-    }
-    */
-  }
   ShowHideComponent = () => {
     if (this.state.show == true) {
       this.setState({ show: false });
@@ -71,20 +55,15 @@ class TopNavbar extends React.Component {
   };
 
   thirdButtonFunction() {
-    console.log('PRESSED');
   }
-
   handleSearch = (keyPress, query) => {
-    console.log(keyPress.keyboardWillHide);
     // if(keyPress.nativeEvent.key=='Enter'){
-    console.log(query);
 
-    this.props.navigation.navigate('Options', { searchQuery: query });
+    this.props.navigation.navigate('SearchResults', { searchQuery: query });
     //}
   };
 
   minimizeSearchBar = () => {
-    console.log('Minimize Search Bar search here');
     this.setState({ show: false });
   }
   logoutUser = async () => {
@@ -94,14 +73,14 @@ class TopNavbar extends React.Component {
       // this.setState({ user: null, loggedIn: false }); // Remember to remove the user from your app's state as well
       this.props.navigation.navigate('Login');
     } catch (error) {
-      console.error(error);
     }
   };
 
   render() {
     const { firstQuery } = this.state;
+    const { navigation } = this.props.navigation;
     let BackButton;
-    if (this.props.navigation.dangerouslyGetParent().state.index > 0) {
+    if (this.props.navigation.dangerouslyGetParent().state.index > 0 && this.props.navigation.state.routeName != 'Login' && this.props.navigation.state.routeName != 'UserProfile' && this.props.navigation.state.routeName != 'Search') {
       BackButton = <Appbar.BackAction color='#FFFFFF' style={{ backgroundColor: '#000000', display: ((Platform.OS === 'web') ? 'none' : 'flex') }}
         onPress={() => this.props.navigation.goBack()}
       />
@@ -114,7 +93,7 @@ class TopNavbar extends React.Component {
       else
         if (this.props.iconName) {
           ThirdButton = <Appbar.Action color='#FFFFFF' icon={(!this.state.userLoggedIn) ? this.props.iconName : 'logout-variant'} style={{ backgroundColor: '#000000' }
-          } onPress={this.props.customFunction} />//) ? this.props.customFunction : this.logoutUser} />
+          } onPress={this.props.customFunction} />
         }
         else
           ThirdButton = <Appbar.Action color='#FFFFFF' icon='settings' style={{ backgroundColor: '#000000' }} onPress={() => { console.log('Pressed') }} />
@@ -126,6 +105,8 @@ class TopNavbar extends React.Component {
 
 
           <Appbar.Header style={appbarCustom.transparentStyle}>
+            
+              /*
             <Searchbar icon='window-minimize' onIconPress={() => { this.minimizeSearchBar() }} iconColor='#C62828' style={{ backgroundColor: '#F8BBD0', width: '100%' }}
               placeholder="Search by title"
               onChangeText={query => { this.setState({ firstQuery: query }); }}
@@ -136,6 +117,8 @@ class TopNavbar extends React.Component {
               onSubmitEditing={(e) => this.handleSearch(e, firstQuery)}
 
             />
+            
+  }
           </Appbar.Header>
 
         ) : (
@@ -146,7 +129,9 @@ class TopNavbar extends React.Component {
                 title={this.props.title}
                 subtitle={this.props.subtitle}
               />
-              <Appbar.Action icon="magnify" color='#FFFFFF' style={{ backgroundColor: '#000000' }} onPress={() => this.ShowHideComponent()} />
+              {
+              //<Appbar.Action icon="magnify" color='#FFFFFF' style={{ backgroundColor: '#000000' }} onPress={() => this.ShowHideComponent()} />
+              }
               {ThirdButton}
             </Appbar.Header>
           )
@@ -159,7 +144,7 @@ class TopNavbar extends React.Component {
   }
 }
 function testFunc() {
-  console.log('PRESSED SEARCH CLOSE');
+  
 }
 
 

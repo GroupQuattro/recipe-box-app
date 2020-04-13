@@ -12,7 +12,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  
+
   SafeAreaView,
   Dimensions
 } from 'react-native';
@@ -65,7 +65,7 @@ const customStyles = StyleSheet.create({
         width: 400
       },
       web: {
-      width: ((Dimensions.get('window').width)<500)? ((Dimensions.get('window').width)-50): 600,
+        width: ((Dimensions.get('window').width) < 500) ? ((Dimensions.get('window').width) - 50) : 600,
 
 
       }
@@ -86,7 +86,7 @@ const customStyles = StyleSheet.create({
         width: 270
       },
       web: {
-      width: ((Dimensions.get('window').width)<500)? ((Dimensions.get('window').width)-70): 550,
+        width: ((Dimensions.get('window').width) < 500) ? ((Dimensions.get('window').width) - 70) : 550,
 
 
       }
@@ -120,7 +120,7 @@ const customStyles = StyleSheet.create({
         width: 300
       },
       web: {
-       width: ((Dimensions.get('window').width)<500)? ((Dimensions.get('window').width)-50): 600,
+        width: ((Dimensions.get('window').width) < 500) ? ((Dimensions.get('window').width) - 50) : 600,
 
 
       }
@@ -151,11 +151,17 @@ class HomeScreen extends React.Component {
               <Headline>A box full of recipes for you.</Headline>
               <Image source={require('../assets/images/splash.png')} style={{ width: 200, height: 200, position: "relative" }}></Image>
 
+
               <Surface style={customStyles.defaultRounded}>
-                <Text style={{ color: '#ffffff' }}>Scroll  To Know More
+                <Text onPress={() => this.props.navigation.navigate('Login')} style={{ color: '#ffffff', fontSize: 18 }}>Create Account
      </Text>
 
               </Surface>
+
+              <Text style={{ color: '#00000', fontWeight: "600", margin: 10 }}>Scroll  To Know More
+     </Text>
+
+
             </View>
 
           </View>
@@ -165,24 +171,20 @@ class HomeScreen extends React.Component {
             <View style={{ alignContent: "center", justifyContent: "center", alignItems: "center" }}>
               <View style={customStyles.viewBoxStyle}>
                 <Headline style={{ color: '#FFFFFF', fontWeight: "600" }}>Search Recipes</Headline>
-                <Title>Search thousands of recipes from different cuisine and cultures</Title>
+                <Title>Search recipes of different cuisine and cultures by our users </Title>
                 <Card style={customStyles.nestedCardStyle}>
                   <Card.Content>
-                    <Subheading style={{ justifyContent: "flex-start" }}>Search For Recipes based on the ingredients you have, author of recipes or title of dish</Subheading>
+                    <Subheading style={{ justifyContent: "flex-start" }}>Search For Recipes based on the ingredients you have, cuisine of recipe or meal type</Subheading>
+
                   </Card.Content>
                 </Card>
 
                 <Card style={customStyles.nestedCardStyle}>
                   <Card.Content>
-                    <Subheading style={{ justifyContent: "flex-start" }}>Filter recipes by excluding any ingredients, diet, allergens and cuisine</Subheading>
+                    <Subheading style={{ justifyContent: "flex-start" }}>Filter recipes by  ingredients and meal type</Subheading>
                   </Card.Content>
                 </Card>
 
-                <Card style={customStyles.nestedCardStyle}>
-                  <Card.Content>
-                    <Subheading style={{ justifyContent: "flex-start" }}>Explore recipes of the day</Subheading>
-                  </Card.Content>
-                </Card>
               </View>
               <View style={customStyles.viewBoxStyle}>
 
@@ -213,7 +215,7 @@ class HomeScreen extends React.Component {
               <View style={customStyles.viewBoxStyle}>
 
                 <Headline style={{ color: '#FFFFFF', fontWeight: "600" }}>Share Recipes</Headline>
-                <Title>Share with others on the app or send your friends a link to your dish.</Title>
+                <Title>Share with others on the app </Title>
 
                 <Card style={customStyles.nestedCardStyle}>
                   <Card.Content>
@@ -228,45 +230,13 @@ class HomeScreen extends React.Component {
                   </Card.Content>
                 </Card>
 
-                <Card style={customStyles.nestedCardStyle}>
-                  <Card.Content>
-                    <Subheading style={{ justifyContent: "flex-start" }}>Rate other recipes</Subheading>
-                  </Card.Content>
-                </Card>
               </View>
-              <View style={customStyles.viewBoxStyle}>
 
-                <Headline style={{ color: '#FFFFFF', fontWeight: "600" }}>Much More</Headline>
-                <Title>We got lots of extras too. </Title>
-
-
-                <Card style={customStyles.nestedCardStyle}>
-                  <Card.Content>
-                    <Subheading style={{ justifyContent: "flex-start" }}>Define your own quick filters</Subheading>
-                  </Card.Content>
-                </Card>
-
-                <Card style={customStyles.nestedCardStyle}>
-                  <Card.Content>
-                    <Subheading style={{ justifyContent: "flex-start" }}>Create Cookbooks: A collection of your recipes</Subheading>
-                  </Card.Content>
-                </Card>
-
-                <Card style={customStyles.nestedCardStyle}>
-                  <Card.Content>
-                    <Subheading style={{ justifyContent: "flex-start" }}>Download recipes for offline use.</Subheading>
-                  </Card.Content>
-                </Card>
-              </View>
             </View>
           </View>
           <View style={viewChildrenStyle.sameColumn}>
-            <Button icon="magnify" mode="contained" style={{ marginBottom: 5 }} onPress={() => this.props.navigation.navigate('Search')}>
-              Start Searching
-  </Button>
-            <Button icon="comment-question" mode="contained" style={{ marginBottom: 5 }} onPress={() => this.props.navigation.navigate('Options')}>
-              Know More About Recipe Box
-  </Button>
+
+
           </View>
 
         </ScrollView>
